@@ -2,16 +2,17 @@
 import { bemto } from "../";
 
 describe("bemto", () => {
+  const props = {
+    className: "Foo",
+    href: "#hello",
+    _mod: "bar",
+    __Elem: {
+      title: "elem title",
+      className: "extraElemClass"
+    }
+  };
+
   describe("Basic case with a modifier", () => {
-    const props = {
-      className: "Foo",
-      href: "#hello",
-      _mod: "bar",
-      __Elem: {
-        title: "elem title",
-        className: "extraElemClass"
-      }
-    };
     const { getProps } = bemto(props);
 
     it("should output proper root", () => {
@@ -72,6 +73,54 @@ Object {
         .toMatchInlineSnapshot(`
 Object {
   "className": "Foo__Elem extraElemClass u-extra",
+  "title": "elem title",
+}
+`);
+    });
+
+    it("should output proper root with added props", () => {
+      expect(getProps("__Root", { title: "hello" })).toMatchInlineSnapshot(`
+Object {
+  "className": "Foo Foo_mod_bar",
+  "href": "#hello",
+  "title": "hello",
+}
+`);
+    });
+
+    it("should output proper element with added props", () => {
+      expect(getProps("__Elem", { "aria-hidden": true }))
+        .toMatchInlineSnapshot(`
+Object {
+  "aria-hidden": true,
+  "className": "Foo__Elem extraElemClass",
+  "title": "elem title",
+}
+`);
+    });
+  });
+
+  describe("Adding props at ", () => {
+    const { getProps } = bemto(props, {
+      __Root: { title: "hello" },
+      __Elem: { "aria-hidden": true }
+    });
+
+    it("should output proper root with added props", () => {
+      expect(getProps()).toMatchInlineSnapshot(`
+Object {
+  "className": "Foo Foo_mod_bar",
+  "href": "#hello",
+  "title": "hello",
+}
+`);
+    });
+
+    it("should output proper element with added props", () => {
+      expect(getProps("__Elem")).toMatchInlineSnapshot(`
+Object {
+  "aria-hidden": true,
+  "className": "Foo__Elem extraElemClass",
   "title": "elem title",
 }
 `);
