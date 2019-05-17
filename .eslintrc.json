@@ -1,0 +1,36 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "indent": [
+      "warn",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "semi": "warn",
+    "no-extra-parens": "warn",
+    "no-multi-spaces": "warn",
+    "max-len": [
+      "warn",
+      {
+        "ignoreTemplateLiterals": true,
+        "ignoreComments": true
+      }
+    ]
+  }
+}
