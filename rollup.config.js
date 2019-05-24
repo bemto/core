@@ -29,13 +29,13 @@ const esOutput = {
 const umdPlugins = [
   resolve(),
   commonjs(),
-  babel({
-    exclude: 'node_modules/**',
-  }),
+  babel({ exclude: 'node_modules/**' }),
 ];
 
 // TODO: Should I include resolve/commonjs here?
-const esPlugins = [];
+const esPlugins = [
+  babel({ exclude: 'node_modules/**' }),
+];
 
 if (process.env.SNAPSHOTS) {
   umdPlugins.push(sizeSnapshot());
