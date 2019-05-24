@@ -23,9 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/bemto/core.git"
   },
-  "dependencies": {
+  "bugs": {
+    "url": "https://github.com/bemto/core/issues"
+  },
+  "homepage": "https://github.com/bemto/core#readme",  "dependencies": {
   },
   "devDependencies": {
     "@bemto/dev-core-setup": "^0.1.0"
