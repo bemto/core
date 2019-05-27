@@ -39,7 +39,9 @@ const getMethodsWithSettings = ({
   };
 
   const normalizeElementOption = (input) => {
-    if (typeof input === 'object') {
+    if (
+      typeof input === 'object'
+    ) {
       return input;
     }
     return { component: input };
