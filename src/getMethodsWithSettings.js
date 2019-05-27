@@ -38,26 +38,59 @@ const getMethodsWithSettings = ({
     return { children: input };
   };
 
+  const normalizeElementOption = (input) => {
+    if (typeof input === 'object') {
+      return input;
+    }
+    return { component: input };
+  };
+
   const isNully = val => val === undefined || val === null || val === false;
 
-  const filterProps = (props, options = {}) =>
-    Object.keys(props).reduce((result, prop) => {
+  const filterProps = (props, options = {}) => {
+    const rootProps = {
+      className: '',
+      ...props[rootElem],
+    };
+
+    const propsReducer = (ac, prop) => {
       if (prop.indexOf('__') === 0) {
         if (prop !== rootElem && !isNully(props[prop])) {
-          result.elements[prop] = normalizeElementProp(props[prop]);
+          if (!ac.elements[prop]) {
+            ac.elements[prop] = {};
+          }
+          ac.elements[prop].props = normalizeElementProp(props[prop]);
         }
       } else if (prop.indexOf('_') === 0) {
-        result.modifiers[prop] = props[prop];
+        ac.modifiers[prop] = props[prop];
       } else {
-        result.rootProps[prop] = props[prop];
+        rootProps[prop] = props[prop];
       }
-      return result;
-    }, {
-      rootProps: { className: '', ...props[rootElem] },
+      return ac;
+    };
+
+    const optionsElementsReducer = (ac, elem) => {
+      if (elem.indexOf('__') === 0) {
+        if (props[elem] !== null && props[elem] !== false) {
+          ac[elem] = normalizeElementOption(options[elem]);
+        }
+      }
+      return ac;
+    };
+
+    const result = {
       blockNames: (options.block || props.className || '').split(/\s+/),
-      elements: {},
+      elements: Object.keys(options).reduce(optionsElementsReducer, {}),
       modifiers: {},
-    });
+    };
+
+    Object.keys(props).reduce(propsReducer, result);
+    result.elements[rootElem] = {
+      ...result.elements[rootElem],
+      props: rootProps,
+    };
+    return result;
+  };
 
   return { getModifiers, getElement, filterProps };
 };

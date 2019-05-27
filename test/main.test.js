@@ -100,10 +100,12 @@ Object {
     });
   });
 
-  describe("Adding props at ", () => {
-    const { getProps } = bemto(props, {
-      __Root: { title: "hello" },
-      __Elem: { "aria-hidden": true }
+  // TODO: ~maybe~ implement props merging at options in the future.
+  describe("Adding default props values", () => {
+    const { getProps } = bemto({
+      ...props,
+      __Root: { title: "hello", ...props.__Root },
+      __Elem: { "aria-hidden": true, ...props.__Elem },
     });
 
     it("should output proper root with added props", () => {

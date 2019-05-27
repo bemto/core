@@ -21,12 +21,10 @@ const bemtoFactory = (settings) => {
   const bemto = (props, options = {}) => {
     const result = filterProps(props, options);
 
-    result.rootProps.className = [
-      result.rootProps.className,
+    result.elements[rootElem].props.className = [
+      result.elements[rootElem].props.className,
       getModifiers(result.blockNames, result.modifiers).join(' '),
     ].join(' ').trim();
-
-    result.elements[rootElem] = result.rootProps;
 
     result.getProps = (el, props) => {
       const isRoot = !el || el === rootElem;
@@ -34,15 +32,18 @@ const bemtoFactory = (settings) => {
       let elemBlock;
       if (isRoot) {
         elemBlock = result.blockNames.join(' ');
-        elemProps = { ...options[el || rootElem], ...result.rootProps };
+        elemProps = { ...result.elements[rootElem].props };
       } else {
         elemBlock = getElement(result.blockNames, el).join(' ');
-        elemProps = { ...options[el || rootElem], ...result.elements[el] };
+        elemProps = {
+          ...result.elements[el] && result.elements[el].props,
+        };
         elemProps.className = [elemBlock, elemProps.className].join(' ').trim();
       }
 
       if (props) {
-        const handledProps = bemto(props, { block: elemBlock }).rootProps;
+        const handledProps =
+          bemto(props, { block: elemBlock }).elements[rootElem].props;
         const className = elemProps.className;
         elemProps = { ...elemProps, ...handledProps };
         elemProps.className =
