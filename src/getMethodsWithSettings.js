@@ -1,3 +1,6 @@
+const SPACES_REGEX = /\s+/;
+const MODIFIER_REGEX = /^(\S*?[^_])_[^_]/;
+
 const getMethodsWithSettings = ({
   omitTrueModValue,
   getters,
@@ -49,6 +52,15 @@ const getMethodsWithSettings = ({
 
   const isNully = val => val === undefined || val === null || val === false;
 
+  const getBlockNames = str => str.split(SPACES_REGEX)
+    .filter((name, i, arr) => {
+      const isModifier = name.match(MODIFIER_REGEX);
+      if (isModifier && arr.indexOf(isModifier[1]) !== -1) {
+        return false;
+      }
+      return true;
+    });
+
   const filterProps = (props, options = {}) => {
     const rootProps = {
       className: '',
@@ -81,7 +93,7 @@ const getMethodsWithSettings = ({
     };
 
     const result = {
-      blockNames: (options.block || props.className || '').split(/\s+/),
+      blockNames: getBlockNames(options.block || props.className || ''),
       elements: Object.keys(options).reduce(optionsElementsReducer, {}),
       modifiers: {},
     };
@@ -94,7 +106,7 @@ const getMethodsWithSettings = ({
     return result;
   };
 
-  return { getModifiers, getElement, filterProps };
+  return { getBlockNames, getElement, getModifiers, filterProps };
 };
 
 export default getMethodsWithSettings;
